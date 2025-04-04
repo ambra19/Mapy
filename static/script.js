@@ -11,7 +11,7 @@ const terrainColors = {
   };
   const canvas = document.getElementById("mapCanvas");
   const ctx = canvas.getContext("2d");
-  const tileSize = 8;
+  const tileSize = 15;
   
   let map = [];
   let selectedPoints = [];
@@ -36,9 +36,39 @@ const terrainColors = {
       for (let x = 0; x < map[0].length; x++) {
         const terrain = map[y][x];
         ctx.fillStyle = terrainColors[terrain] || "#000";
-        ctx.fillRect(x * tileSize, y * tileSize, tileSize-1, tileSize-1);
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize-0.5, tileSize-0.5);
       }
     }
+  }
+
+  function handleErrors(message, duration) {
+    // Create notification container
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-notification';
+    errorDiv.textContent = message;
+
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.className = 'error-close-button';
+    closeButton.innerHTML = '&times;';
+    closeButton.setAttribute('aria-label', 'Close notification');
+    
+    // Add close functionality
+    closeButton.onclick = () => {
+        errorDiv.classList.add('fade-out');
+        setTimeout(() => errorDiv.remove(), 300);
+    };
+    errorDiv.appendChild(closeButton);
+
+    // Add to DOM
+    document.body.appendChild(errorDiv);
+
+    // Auto-remove after duration
+    setTimeout(() => {
+        if (document.body.contains(errorDiv)) {
+            errorDiv.classList.add('fade-out');
+        }
+    }, duration);
   }
   
 
@@ -51,12 +81,14 @@ const terrainColors = {
     const allowedTerrains = ["sand", "land", "forest", "mountain", "mountain_dark"];
   
     if (!allowedTerrains.includes(terrain)) {
-      alert("You can't start or end on this tile.");
+      let message = "You can't start or end on this tile";
+      handleErrors(message, 2000);
+      selectedPoints.pop(); 
       return;
     }
   
     selectedPoints.push([x, y]);
-    console.log(x, y);
+    console.log(y, x);
   
     if (selectedPoints.length === 2) {
       const [start, end] = selectedPoints;
@@ -69,16 +101,14 @@ const terrainColors = {
       .then(res => res.json())
       .then(data => {
         console.log("data from backend", data);
-        if (!data || data.error || !Array.isArray(data.path) || data.length == 0) {
-            alert("❌ There is no path between the selected points.");
+        if (!data || data.error || data.length == 0) {
+          let message = "No path found. Please try again.";
+          handleErrors(message, 2000);
             return;
           }
         drawPath(data.path);
       })
-      // .catch(err => {
-      //   alert("Something went wrong while fetching the path.");
-      //   console.error("🚨 Fetch error:", err);
-      // });
+
       console.log("start" + start, "end" + end);
     //   console.log("path" + path);
       selectedPoints = []; // Reset
@@ -92,9 +122,8 @@ const terrainColors = {
         console.log("No path found baaaa");
         return;
     }
-  
     ctx.strokeStyle = "red";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 4;
     ctx.beginPath();
   
     for (let i = 0; i < path.length; i++) {

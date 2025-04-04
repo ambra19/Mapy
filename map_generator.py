@@ -4,7 +4,7 @@ import random
 from PIL import Image
 
 
-def generate_map(width=100, height=100, scale=80):
+def generate_map(width=45, height=45, scale=40):
     random_base = random.randint(0, 1000)
 
     octaves = 4
@@ -23,7 +23,7 @@ def generate_map(width=100, height=100, scale=80):
                                       lacunarity=lacunarity,
                                       repeatx=width,
                                       repeaty=height,
-                                      base=564)
+                                      base=random_base)
 
             normalized = noise_val + 0.5  # [-0.5, 0.5] → [0.0, 1.0]
 
