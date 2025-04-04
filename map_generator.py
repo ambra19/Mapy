@@ -1,41 +1,55 @@
-from noise import pnoise2
+import noise
 import numpy as np
 import random
-from noise import snoise2
+from PIL import Image
 
 
-def generate_map(width=80, height=60, scale=0.02):
-    terrain = []
-
+def generate_map(width=100, height=100, scale=100):
     random_base = random.randint(0, 1000)
 
-    for y in range(height):
+    octaves = 4
+    persistence = 0.5
+    lacunarity = 2.0
+
+    terrain_map = []
+
+    for i in range(height):
         row = []
-        for x in range(width):
-            noise_val = snoise2(
-                x * scale, y * scale,
-                octaves=4,
-                persistence=0.4,
-                lacunarity=2.0,
-                repeatx=1024,
-                repeaty=1024,
-                base=random_base  
-            )
+        for j in range(width):
+            noise_val = noise.snoise2(i / scale,
+                                      j / scale,
+                                      octaves=octaves,
+                                      persistence=persistence,
+                                      lacunarity=lacunarity,
+                                      repeatx=width,
+                                      repeaty=height,
+                                      base=564)
 
-            normalized = (noise_val + 0.5)  # [-0.5, 0.5] → [0, 1]
+            normalized = noise_val + 0.5  # [-0.5, 0.5] → [0.0, 1.0]
 
-            if normalized < 0.1:
+            if normalized < 0.2:
+                row.append("ocean")
+            elif normalized < 0.45:
                 row.append("water")
-            elif normalized < 0.2:
-                row.append("deep_water")
-            elif normalized < 0.55:
-                row.append("land")
+            elif normalized < 0.5:
+                row.append("sand")
             elif normalized < 0.7:
-                row.append("mountain")
+                row.append("land")
+            elif normalized < 0.78:
+                row.append("forest")
             elif normalized < 0.85:
+                row.append("mountain")
+            elif normalized < 0.93:
                 row.append("mountain_dark")
+            elif normalized < 0.99:
+                row.append("stone")
             else:
                 row.append("snow")
-        terrain.append(row)
-    return terrain
+        terrain_map.append(row)
+    print(random_base)
+    return terrain_map
+
+
+
+
 

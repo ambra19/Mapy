@@ -1,5 +1,4 @@
 Flask==2.0.1
-pipreqs==0.4.10
-numpy
-pygame
 noise
+numpy
+Pillow
