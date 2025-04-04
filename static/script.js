@@ -21,8 +21,8 @@ const terrainColors = {
     .then(data => {
         map = data.map;
 
-        canvas.width = map[0].length * tileSize;
-        canvas.height = map.length * tileSize;
+        canvas.width = map[0].length * tileSize; 
+        canvas.height = map.length * tileSize ;
 
         drawMap();
 
@@ -36,7 +36,7 @@ const terrainColors = {
       for (let x = 0; x < map[0].length; x++) {
         const terrain = map[y][x];
         ctx.fillStyle = terrainColors[terrain] || "#000";
-        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize-1, tileSize-1);
       }
     }
   }
@@ -69,16 +69,16 @@ const terrainColors = {
       .then(res => res.json())
       .then(data => {
         console.log("data from backend", data);
-        if (!data || data.error || !Array.isArray(data.path) || data.path.length === 0) {
+        if (!data || data.error || !Array.isArray(data.path) || data.length == 0) {
             alert("❌ There is no path between the selected points.");
             return;
           }
         drawPath(data.path);
       })
-      .catch(err => {
-        alert("Something went wrong while fetching the path.");
-        console.error("🚨 Fetch error:", err);
-      });
+      // .catch(err => {
+      //   alert("Something went wrong while fetching the path.");
+      //   console.error("🚨 Fetch error:", err);
+      // });
       console.log("start" + start, "end" + end);
     //   console.log("path" + path);
       selectedPoints = []; // Reset

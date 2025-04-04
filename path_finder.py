@@ -1,11 +1,11 @@
 import time
 
 TERRAIN_COST = {
-    "sand": 1,
+    "sand": 5,
     "land": 1,
-    "forest": 2,
-    "mountain": 4,
-    "mountain_dark": 5,
+    "forest": 10,
+    "mountain": 20,
+    "mountain_dark": 30,
     "ocean": -1,
     "water": -1,
     "stone": -1,
@@ -25,8 +25,8 @@ class Node:
         return self.position == other.position
 
 def astar(terrain_map, start, end):
-    start_time = time.time()
-    max_time = 1.0  # seconds
+    # start_time = time.time()
+    # max_time = 1.0  # seconds
 
     start_node = Node(None, start)
     end_node = Node(None, end)
@@ -37,8 +37,8 @@ def astar(terrain_map, start, end):
     while open_list:
         # A* gets in an inf loop when it tries to find a path
         # near the edge of the map
-        if time.time() - start_time > max_time:
-            return None
+        # if time.time() - start_time > max_time:
+        #     return None
         current_node = open_list[0]
         current_index = 0
         for index, node in enumerate(open_list):
@@ -62,9 +62,13 @@ def astar(terrain_map, start, end):
             node_pos = (current_node.position[0] + offset[0],
                         current_node.position[1] + offset[1])
 
-            if (node_pos[0] < 0 or node_pos[0] >= len(terrain_map) or
-                node_pos[1] < 0 or node_pos[1] >= len(terrain_map[0])):
-                continue
+            if (
+                node_pos[0] < 0  # x cannot be negative
+                or node_pos[0] >= len(terrain_map[0])  # x < map width
+                or node_pos[1] < 0  # y cannot be negative
+                or node_pos[1] >= len(terrain_map)  # y < map height
+            ):
+                continue  # Skip invalid positions
 
             terrain = terrain_map[node_pos[1]][node_pos[0]]
             cost = TERRAIN_COST.get(terrain, -1)
@@ -73,13 +77,14 @@ def astar(terrain_map, start, end):
                 continue
 
             new_node = Node(current_node, node_pos)
+            new_node.cost = cost  # Store cost here
             children.append(new_node)
 
         for child in children:
             if child in closed_list:
                 continue
 
-            child.g = current_node.g + cost
+            child.g = current_node.g + child.cost
             child.h = (child.position[0] - end_node.position[0]) ** 2 + (child.position[1] - end_node.position[1]) ** 2
             child.f = child.g + child.h
 
@@ -89,3 +94,25 @@ def astar(terrain_map, start, end):
             open_list.append(child)
 
 
+def main():
+
+    maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+    start = (0, 0)
+    end = (7, 6)
+
+    path = astar(maze, start, end)
+    print(path)
+
+
+if __name__ == '__main__':
+    main()
