@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="container">
-    <!-- Left Side: Investment Form -->
+    <!-- Side Bar -->
     <div class="left">
       <div class="inside-header">
         <h2>Welcome to Mapy</h2> 
@@ -22,10 +22,14 @@
         <label><input type="radio" name="travel_mode" value="walk" checked> Walk🚶‍♂️</label>
         <label><input type="radio" name="travel_mode" value="drive"> Car 🚘</label>
       </div>
+      <div class="reset">
+        <button id="resetButton">Clear Paths</button>
+        <button id="resetMap">Regenerate Map</button>
+      </div>
 
     </div>
 
-    <!-- Right Side: Projection Results -->
+    <!-- Map -->
     <div class="right">
         <canvas id="mapCanvas"></canvas>
     </div>

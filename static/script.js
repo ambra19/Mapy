@@ -17,30 +17,43 @@ const terrainColors = {
   let selectedPoints = [];
   let noPath = false;
   
-  fetch('/map_display')
-    .then(res => res.json())
-    .then(data => {
-        map = data.map;
+  function loadMap() {
+    fetch('/map_display')
+      .then(res => res.json())
+      .then(data => {
+          map = data.map;
 
-        canvas.width = map[0].length * tileSize; 
-        canvas.height = map.length * tileSize ;
+          canvas.width = map[0].length * tileSize; 
+          canvas.height = map.length * tileSize ;
 
-        drawMap();
+          drawMap();
 
-        canvas.addEventListener("click", handleClick);
-    });
-  
-  
+          canvas.addEventListener("click", handleClick);
+      });
+  }
+
+  document.getElementById('resetMap').addEventListener('click', loadMap);
+  window.onload = loadMap;
+
   // Draw the terrain map
   function drawMap() {
     for (let y = 0; y < map.length; y++) {
       for (let x = 0; x < map[0].length; x++) {
         const terrain = map[y][x];
         ctx.fillStyle = terrainColors[terrain] || "#000";
-        ctx.fillRect(x * tileSize, y * tileSize, tileSize-0.5, tileSize-0.5);
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize-0.3, tileSize-0.3);
       }
     }
   }
+
+  function resetPaths() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMap();
+    selectedPoints = [];
+  }
+
+  // Add event listener to the reset button
+  document.getElementById('resetButton').addEventListener('click', resetPaths);
 
   function handleErrors(message, duration) {
     // Create notification container
@@ -82,50 +95,71 @@ const terrainColors = {
   function resetTile(x, y) {
     const terrain = map[y][x];
     ctx.fillStyle = terrainColors[terrain] || "#000";
-    ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    ctx.fillRect(x * tileSize, y * tileSize, tileSize-0.3, tileSize-0.3);
 }
 
-  function handleClick(e) {
-    const x = Math.floor(e.offsetX / tileSize);
-    const y = Math.floor(e.offsetY / tileSize);
-  
-    const terrain = map[y][x];
-    const travelMode = document.querySelector('input[name="travel_mode"]:checked').value;
-    const allowedTerrains = ["sand", "land", "forest", "mountain", "mountain_dark"];
+function handleClick(e) {
+  const x = Math.floor(e.offsetX / tileSize);
+  const y = Math.floor(e.offsetY / tileSize);
 
-    if (!allowedTerrains.includes(terrain)) {
-        let message = "You can't start or end on this tile";
-        handleErrors(message, 2000);
-        selectedPoints.pop();
-        return;
-    }
+  const terrain = map[y][x];
+  const travelMode = document.querySelector('input[name="travel_mode"]:checked').value;
+  const allowedTerrains = ["sand", "land", "forest", "mountain", "mountain_dark"];
 
-    // Add new point
-    selectedPoints.push([x, y]);
-    colorTile(x, y, 'rgba(255, 0, 0, 1)'); 
-    console.log(y, x);
-    console.log(selectedPoints);
+  if (!allowedTerrains.includes(terrain)) {
+      let message = "You can't start or end on this tile";
+      handleErrors(message, 2000);
+      if (selectedPoints.length > 0) {
+          selectedPoints.pop(); 
+      }
+      return;
+  }
 
-    // If we have two points, check for path
-    if (selectedPoints.length === 2) {
-        const [start, end] = selectedPoints;
+  // Add new point
+  selectedPoints.push([x, y]);
+  colorTile(x, y, 'rgba(255, 0, 0, 1)'); // Temporary red color
+  console.log(y, x);
 
-        fetch('/route', {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ start, end, travel_mode: travelMode })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (!data || data.error || data.length == 0) {
-                let message = "No path found. Please try again.";
-                handleErrors(message, 2000);
-                return;
-            }
-            drawPath(data.path);
-        })
-        selectedPoints = []; 
-    }
+  // If we have two points, check for path
+  if (selectedPoints.length === 2) {
+      const [start, end] = selectedPoints;
+      const [startX, startY] = start;
+      const [endX, endY] = end;
+
+      fetch('/route', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ start, end, travel_mode: travelMode })
+      })
+      .then(res => res.json())
+      .then(data => {
+          if (!data || data.error || data.length == 0) {
+              let message = "No path found. Please try again.";
+              handleErrors(message, 2000);
+              // Reset the tiles to their original colors
+              resetTile(startX, startY);
+              resetTile(endX, endY);
+              selectedPoints = [];
+              return;
+          }
+          // Only proceed if path exists
+          colorTile(startX, startY, "#00FF00"); // Green for start
+          colorTile(endX, endY, "#FF0000");     // Red for end
+          drawPath(data.path);
+      })
+      .catch(err => {
+          console.error("Error:", err);
+          // Reset tiles on error too
+          if (selectedPoints.length === 2) {
+              const [[startX, startY], [endX, endY]] = selectedPoints;
+              resetTile(startX, startY);
+              resetTile(endX, endY);
+          }
+          selectedPoints = [];
+      });
+      
+      selectedPoints = []; // Reset for next selection
+  }
 }
   
   
