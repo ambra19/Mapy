@@ -4,7 +4,7 @@ import random
 from PIL import Image
 
 
-def generate_map(width=45, height=45, scale=40):
+def generate_map(width=80, height=80, scale=40):
     random_base = random.randint(0, 1000)
 
     octaves = 4
