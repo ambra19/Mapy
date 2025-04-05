@@ -28,11 +28,10 @@ body {
 
 
 /* LEFT SIDE */
-
 .left {
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center children horizontally */
+    flex-direction: column; 
+    align-items: center; 
     background: #f0f0f0;
     border-radius: 10px;
     border: 1px solid #c7c7c7;
@@ -40,7 +39,7 @@ body {
   }
   
   .inside-header {
-    margin-top: 25px; /* Push from top */
+    margin-top: 25px; 
     display: flex;
     align-items: center;
     gap: 10px;
@@ -64,21 +63,60 @@ h2 {
 }
 
 .transport {
-    /* Positioning */
-    position: absolute; /* or 'absolute' if inside another positioned element */
-    top: 38%;
-    transform: translateY(-50%);
-    
-    /* Visual styling */
+    position: absolute; 
+    top: 28%;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 200px;
-    
-    /* Typography */
+    width: 250px;
     font-family: 'Arial', sans-serif;
     color: #333;
+  }
+
+  .travel {
+    position: absolute; 
+    top: 60%;    
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    font-weight: bold;
+  }
+
+  .legend {
+    position: absolute; 
+    top: 72%;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    font-weight: bold;
+    font-size: 0.6em;
+    text-align: center;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 2px 0;
+  }
+  
+  .color-box {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+    border: 1px solid #999;
   }
 
   .reset {
@@ -87,28 +125,29 @@ h2 {
 }
 
   .reset button {
-    background-color: #ffffff; /* Green background */
-    color: rgb(0, 0, 0); /* White text */
+    background-color: #ffffff;
+    color: rgb(0, 0, 0); 
     padding: 15px 32px; 
-    text-align: center; /* Center the text */
-    display: inline-block; /* Make the buttons appear side by side */
+    text-align: center; 
+    display: inline-block; 
     margin: 4px 2px;
-    cursor: pointer; /* Add a pointer cursor on hover */
-    border-radius: 12px; /* Rounded corners */
-    transition-duration: 0.5s; /* Animation duration */
-    border: 1px solid #c7c7c7; /* Border color */
-    font-size: 1em; /* Font size */
+    cursor: pointer; 
+    border-radius: 12px; 
+    transition-duration: 0.5s; 
+    border: 1px solid #c7c7c7; 
+    font-size: 1em; 
     font-weight: bold;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
   .reset button:hover {
-    background-color: #02829f; /* White background on hover */
-    color: rgb(255, 255, 255); /* Black text on hover */
+    background-color: #02829f; 
+    color: rgb(255, 255, 255); 
 }
   
+/* Transport */
   .transport p {
-    margin: 0 0 15px 0;
+    text-align: center;
     font-weight: bold;
     font-size: 1.1em;
   }
@@ -119,12 +158,16 @@ h2 {
     cursor: pointer;
     font-size: 1em;
     transition: all 0.2s;
+    text-align: center;
+
   }
   
   .transport input[type="checkbox"] {
     margin-right: 10px;
     accent-color: #0066ff;
     transform: scale(1.2);
+    text-align: center;
+
   }
 
 
@@ -141,10 +184,9 @@ h3 {
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
 }
 
-/* RIGHT SIDE (RESULTS) */
+/* RIGHT SIDE */
 .right {
     background: black;
-    /* padding: 0px; */
     border-radius: 10px;
     overflow-y: auto;
     border: 1px solid #c7c7c7;
@@ -193,6 +235,8 @@ h3 {
     opacity: 0.8;
 }
 
+
+/* Animation for Error Notification */
 @keyframes slideIn {
     from {
         transform: translate(-50%, -30px);

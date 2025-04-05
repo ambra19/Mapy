@@ -25,7 +25,7 @@ def generate_map(width=50, height=50, scale=40):
                                       repeaty=height,
                                       base=random_base)
 
-            normalized = noise_val + 0.5  # [-0.5, 0.5] → [0.0, 1.0]
+            normalized = noise_val + 0.5  # [-0.5, 0.5] → [0.0, 1.0] normalization
 
             if normalized < 0.2:
                 row.append("ocean")

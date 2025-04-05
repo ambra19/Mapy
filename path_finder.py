@@ -1,7 +1,6 @@
 import time
 
 TERRAIN_SPEED = {
-    # Format: {"walk": speed_kmh, "drive": speed_kmh}
     "sand":        {"walk": 2.5,  "drive": 20}, # 0.4 0.05
     "land":        {"walk": 5.0,  "drive": 45}, # 0.2 0.02
     "forest":      {"walk": 4.0,  "drive": 25}, # 0.33 0.06
@@ -19,8 +18,20 @@ def get_time_cost(terrain, travel_mode):
         return float('inf')  
     if travel_mode == "walk":
         return (1 / speed) * 10
-    else:
-        return(1 / speed) * 100  # the bigger the speed => the lower the cost
+    return(1 / speed) * 100  # the bigger the speed => the lower the cost
+
+def calculate_travel_time(path, terrain_map, travel_mode):
+    if not path or len(path) < 2:
+        return 0
+    
+    total_time_hours = 0
+    for (x, y) in path:
+        terrain = terrain_map[y][x]
+        speed = TERRAIN_SPEED[terrain][travel_mode]
+        if speed > 0:
+            total_time_hours += 1 / speed
+    
+    return total_time_hours
 
 class Node:
     def __init__(self, parent=None, position=None):
@@ -62,7 +73,7 @@ def astar(terrain_map, start, end, travel_mode):
                 continue
 
             terrain = terrain_map[y][x]
-            cost = get_time_cost(terrain, travel_mode)  # Dynamic cost
+            cost = get_time_cost(terrain, travel_mode)  
             if cost == float('inf'):
                 continue
 

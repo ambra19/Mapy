@@ -52,32 +52,26 @@ const terrainColors = {
     selectedPoints = [];
   }
 
-  // Add event listener to the reset button
   document.getElementById('resetButton').addEventListener('click', resetPaths);
 
+  // Handle errors
   function handleErrors(message, duration) {
-    // Create notification container
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-notification';
     errorDiv.textContent = message;
 
-    // Create close button
     const closeButton = document.createElement('button');
     closeButton.className = 'error-close-button';
     closeButton.innerHTML = '&times;';
     closeButton.setAttribute('aria-label', 'Close notification');
     
-    // Add close functionality
     closeButton.onclick = () => {
         errorDiv.classList.add('fade-out');
         setTimeout(() => errorDiv.remove(), 300);
     };
     errorDiv.appendChild(closeButton);
-
-    // Add to DOM
     document.body.appendChild(errorDiv);
 
-    // Auto-remove after duration
     setTimeout(() => {
         if (document.body.contains(errorDiv)) {
             errorDiv.classList.add('fade-out');
@@ -86,7 +80,7 @@ const terrainColors = {
   }
   
   function colorTile(x, y, color) {
-    const canvas = document.getElementById('mapCanvas'); // Replace with your canvas ID
+    const canvas = document.getElementById('mapCanvas'); 
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = color;
     ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
@@ -107,20 +101,20 @@ function handleClick(e) {
   const allowedTerrains = ["sand", "land", "forest", "mountain", "mountain_dark"];
 
   if (!allowedTerrains.includes(terrain)) {
-      let message = "You can't start or end on this tile";
+      let message = "You can't start or end on this tile 🚫 !";
       handleErrors(message, 2000);
-      if (selectedPoints.length > 0) {
-          selectedPoints.pop(); 
+      if (selectedPoints.length === 2) {
+          const [[startX, startY], [endX, endY]] = selectedPoints;
+          resetTile(startX, startY);
+          resetTile(endX, endY);
+          selectedPoints = [];
       }
       return;
   }
 
-  // Add new point
   selectedPoints.push([x, y]);
-  colorTile(x, y, 'rgba(255, 0, 0, 1)'); // Temporary red color
-  console.log(y, x);
+  colorTile(x, y, 'rgba(255, 0, 0, 1)'); 
 
-  // If we have two points, check for path
   if (selectedPoints.length === 2) {
       const [start, end] = selectedPoints;
       const [startX, startY] = start;
@@ -134,7 +128,7 @@ function handleClick(e) {
       .then(res => res.json())
       .then(data => {
           if (!data || data.error || data.length == 0) {
-              let message = "No path found. Please try again.";
+              let message = "Oops! You can't walk on water 🌊 ! ";
               handleErrors(message, 2000);
               // Reset the tiles to their original colors
               resetTile(startX, startY);
@@ -143,9 +137,24 @@ function handleClick(e) {
               return;
           }
           // Only proceed if path exists
-          colorTile(startX, startY, "#00FF00"); // Green for start
-          colorTile(endX, endY, "#FF0000");     // Red for end
+          colorTile(startX, startY, "#00FF00"); 
+          colorTile(endX, endY, "#FF0000");     
           drawPath(data.path);
+
+          // Display travel time and distance
+          const distance = data.path.length; 
+          const hours = data.time_hours;
+          const minutes = Math.round(data.time_minutes);
+          
+          let timeString;
+          if (hours > 0.2) {
+              timeString = hours.toFixed(1) + " hours (" + minutes + " mins)";
+          } else {
+              timeString = minutes + " mins";
+          }
+          document.getElementById('time-value').textContent = timeString;
+          document.getElementById('distance-value').textContent = `${distance} km`;
+  
       })
       .catch(err => {
           console.error("Error:", err);
@@ -155,18 +164,15 @@ function handleClick(e) {
               resetTile(startX, startY);
               resetTile(endX, endY);
           }
-          selectedPoints = [];
       });
       
-      selectedPoints = []; // Reset for next selection
+      selectedPoints = []; 
   }
 }
-  
   
   // Draw the path
   function drawPath(path) {
     if (path.error || !path || path.length === 0) {
-        console.log("No path found baaaa");
         selectedPoints = [];
         return;
     }
