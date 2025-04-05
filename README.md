@@ -23,9 +23,14 @@ even stone and snowy tops.
 3. View the optimal path (red line) and travel information.
 
 ## Installation
-1. Open the folder with your favourite IDE and run:
+1. Extract the ZIP file
+2. Open a terminal in your project folder
+3. Set up dependencies:
 ```sh
 pip install -r requirements.txt
+```
+4. Run the application
+```sh
 python app.py
 ```
-
+5. You should be able to see it at localhost in your browser 🙂
