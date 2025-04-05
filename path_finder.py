@@ -1,9 +1,7 @@
-import time
-
 TERRAIN_SPEED = {
-    "sand":        {"walk": 2.5,  "drive": 20}, # 0.4 0.05
-    "land":        {"walk": 5.0,  "drive": 45}, # 0.2 0.02
-    "forest":      {"walk": 4.0,  "drive": 25}, # 0.33 0.06
+    "sand":        {"walk": 2.5,  "drive": 20}, 
+    "land":        {"walk": 5.0,  "drive": 45}, 
+    "forest":      {"walk": 4.0,  "drive": 25}, 
     "mountain":    {"walk": 3.0,  "drive": 15},
     "mountain_dark": {"walk": 1.0,  "drive": 10},
     "ocean":       {"walk": 0,    "drive": 0},  
@@ -12,14 +10,16 @@ TERRAIN_SPEED = {
     "snow":        {"walk": 0,  "drive": 0}
 }
 
+# Time cost based on terrain and travel mode
 def get_time_cost(terrain, travel_mode):
     speed = TERRAIN_SPEED[terrain][travel_mode]
     if speed == 0:
         return float('inf')  
     if travel_mode == "walk":
         return (1 / speed) * 10
-    return(1 / speed) * 100  # the bigger the speed => the lower the cost
+    return(1 / speed) * 100  
 
+# Travel time based on path, terrain and travel mode
 def calculate_travel_time(path, terrain_map, travel_mode):
     if not path or len(path) < 2:
         return 0
@@ -84,7 +84,7 @@ def astar(terrain_map, start, end, travel_mode):
             if child in closed_list:
                 continue
 
-            # CHANGED: Use time-based cost instead of TERRAIN_COST
+            # Time-based cost calculation
             terrain = terrain_map[child.position[1]][child.position[0]]
             child.g = current_node.g + get_time_cost(terrain, travel_mode)
 
@@ -92,7 +92,6 @@ def astar(terrain_map, start, end, travel_mode):
             child.h = (abs(child.position[0] - end_node.position[0]) + abs(child.position[1] - end_node.position[1])) * 1  
             child.f = child.g + child.h
 
-            # Check if node exists in open list with lower g
             found = False
             for idx, open_node in enumerate(open_list):
                 if open_node == child and open_node.g <= child.g:

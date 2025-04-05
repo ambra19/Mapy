@@ -2,8 +2,7 @@
 
 **Mapy** is a **visual pathfinding tool** that computes optimal routes across randomly generated terrain maps using the A* algorithm, 
 with support for **walking and driving modes**. It starts by
-rendering a randomly generated map of different biomes. They can contain mountains, forests, lands, seas, oceans, sands and 
-even stone and snowy tops.
+rendering a randomly generated map using a seed. The map can contain mountains, forests, lands, seas, oceans, sands and even stone and snowy tops.
 
 ![Screenshot](static/images/screenshot.png)
 

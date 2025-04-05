@@ -16,7 +16,7 @@ body {
     height: 100vh;
 }
 
-/* GRID LAYOUT */
+/* Grid Layout */
 .container {
     display: grid;
     grid-template-rows: auto;
@@ -26,8 +26,7 @@ body {
     gap: 10px;
 }
 
-
-/* LEFT SIDE */
+/* Left Side */
 .left {
     display: flex;
     flex-direction: column; 
@@ -73,7 +72,7 @@ h2 {
     color: #333;
   }
 
-  .travel {
+.travel {
     position: absolute; 
     top: 47%;    
     background: rgba(255, 255, 255, 0.9);
@@ -84,9 +83,10 @@ h2 {
     font-family: 'Arial', sans-serif;
     color: #333;
     font-weight: bold;
-  }
+}
 
-  .legend {
+/* Map Legend */
+.legend {
     position: absolute; 
     top: 72%;
     background: rgba(255, 255, 255, 0.9);
@@ -102,30 +102,29 @@ h2 {
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: 1fr 1fr 1fr;
-  }
+}
   
-  .legend-item {
+.legend-item {
     display: flex;
     align-items: center;
     text-align: center;
     margin: 2px 0;
-  }
+}
   
-  .color-box {
+.color-box {
     width: 18px;
     height: 18px;
     margin-right: 5px;
     border: 1px solid #999;
-  }
+}
 
-  .reset {
+.reset {
     text-align: center;
     margin-top: 70%;
 }
 
-  .reset button {
+.reset button {
     background-color: #ffffff;
-    /* color: rgb(0, 0, 0);  */
     padding: 15px 32px; 
     text-align: center; 
     display: inline-block; 
@@ -139,7 +138,7 @@ h2 {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-  .reset button:hover {
+.reset button:hover {
     background-color: #02829f; 
     color: rgb(255, 255, 255); 
 }
@@ -158,16 +157,15 @@ h2 {
     font-size: 1em;
     transition: all 0.2s;
     text-align: center;
-
-  }
+}
   
-  .transport input[type="checkbox"] {
+.transport input[type="checkbox"] {
     margin-right: 10px;
     accent-color: #0066ff;
     transform: scale(1.2);
     text-align: center;
 
-  }
+}
 
 
 h3 {
@@ -183,7 +181,7 @@ h3 {
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
 }
 
-/* RIGHT SIDE */
+/* Right Side */
 .right {
     background: black;
     border-radius: 10px;
@@ -198,7 +196,7 @@ h3 {
     height: auto;
 }
 
-/* Error Notification Styles */
+/* Error Notification */
 .error-notification {
     position: fixed;
     top: 20px;
@@ -233,7 +231,6 @@ h3 {
 .error-close-button:hover {
     opacity: 0.8;
 }
-
 
 /* Animation for Error Notification */
 @keyframes slideIn {

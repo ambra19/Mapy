@@ -35,7 +35,6 @@ def find_route():
         })
 
     else:
-        print("No path found in backend")
         return jsonify({"error": "No valid path found", "path": []}), 200
 
 
