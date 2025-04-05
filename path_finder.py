@@ -3,10 +3,10 @@ import time
 TERRAIN_SPEED = {
     # Format: {"walk": speed_kmh, "drive": speed_kmh}
     "sand":        {"walk": 2.5,  "drive": 20}, # 0.4 0.05
-    "land":        {"walk": 4.5,  "drive": 45}, # 0.2 0.02
-    "forest":      {"walk": 3.0,  "drive": 15}, # 0.33 0.06
-    "mountain":    {"walk": 2.0,  "drive": 10},
-    "mountain_dark": {"walk": 1.0,  "drive": 5},
+    "land":        {"walk": 5.0,  "drive": 45}, # 0.2 0.02
+    "forest":      {"walk": 4.0,  "drive": 25}, # 0.33 0.06
+    "mountain":    {"walk": 3.0,  "drive": 15},
+    "mountain_dark": {"walk": 1.0,  "drive": 10},
     "ocean":       {"walk": 0,    "drive": 0},  
     "water":       {"walk": 0,    "drive": 0},  
     "stone":       {"walk": 0,  "drive": 0},  

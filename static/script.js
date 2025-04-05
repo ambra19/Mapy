@@ -11,10 +11,11 @@ const terrainColors = {
   };
   const canvas = document.getElementById("mapCanvas");
   const ctx = canvas.getContext("2d");
-  const tileSize = 15;
+  const tileSize = 18;
   
   let map = [];
   let selectedPoints = [];
+  let noPath = false;
   
   fetch('/map_display')
     .then(res => res.json())
@@ -71,8 +72,19 @@ const terrainColors = {
     }, duration);
   }
   
+  function colorTile(x, y, color) {
+    const canvas = document.getElementById('mapCanvas'); // Replace with your canvas ID
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = color;
+    ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+  }
 
-  // Handle canvas clicks
+  function resetTile(x, y) {
+    const terrain = map[y][x];
+    ctx.fillStyle = terrainColors[terrain] || "#000";
+    ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+}
+
   function handleClick(e) {
     const x = Math.floor(e.offsetX / tileSize);
     const y = Math.floor(e.offsetY / tileSize);
@@ -80,47 +92,48 @@ const terrainColors = {
     const terrain = map[y][x];
     const travelMode = document.querySelector('input[name="travel_mode"]:checked').value;
     const allowedTerrains = ["sand", "land", "forest", "mountain", "mountain_dark"];
-  
-    if (!allowedTerrains.includes(terrain)) {
-      let message = "You can't start or end on this tile";
-      handleErrors(message, 2000);
-      selectedPoints.pop(); 
-      return;
-    }
-  
-    selectedPoints.push([x, y]);
-    console.log(y, x);
-  
-    if (selectedPoints.length === 2) {
-      const [start, end] = selectedPoints;
-  
-      fetch('/route', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ start, end, travel_mode: travelMode })
-      })
-      .then(res => res.json())
-      .then(data => {
-        console.log("data from backend", data);
-        if (!data || data.error || data.length == 0) {
-          let message = "No path found. Please try again.";
-          handleErrors(message, 2000);
-            return;
-          }
-        drawPath(data.path);
-      })
 
-      console.log("start" + start, "end" + end);
-    //   console.log("path" + path);
-      selectedPoints = []; // Reset
+    if (!allowedTerrains.includes(terrain)) {
+        let message = "You can't start or end on this tile";
+        handleErrors(message, 2000);
+        selectedPoints.pop();
+        return;
     }
-  }
+
+    // Add new point
+    selectedPoints.push([x, y]);
+    colorTile(x, y, 'rgba(255, 0, 0, 1)'); 
+    console.log(y, x);
+    console.log(selectedPoints);
+
+    // If we have two points, check for path
+    if (selectedPoints.length === 2) {
+        const [start, end] = selectedPoints;
+
+        fetch('/route', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ start, end, travel_mode: travelMode })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data || data.error || data.length == 0) {
+                let message = "No path found. Please try again.";
+                handleErrors(message, 2000);
+                return;
+            }
+            drawPath(data.path);
+        })
+        selectedPoints = []; 
+    }
+}
   
   
   // Draw the path
   function drawPath(path) {
     if (path.error || !path || path.length === 0) {
         console.log("No path found baaaa");
+        selectedPoints = [];
         return;
     }
     ctx.strokeStyle = "red";
