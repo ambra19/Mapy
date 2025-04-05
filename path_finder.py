@@ -1,16 +1,26 @@
 import time
 
-TERRAIN_COST = {
-    "sand": 5,
-    "land": 1,
-    "forest": 10,
-    "mountain": 20,
-    "mountain_dark": 30,
-    "ocean": -1,
-    "water": -1,
-    "stone": -1,
-    "snow": -1,
+TERRAIN_SPEED = {
+    # Format: {"walk": speed_kmh, "drive": speed_kmh}
+    "sand":        {"walk": 2.5,  "drive": 20}, # 0.4 0.05
+    "land":        {"walk": 4.5,  "drive": 45}, # 0.2 0.02
+    "forest":      {"walk": 3.0,  "drive": 15}, # 0.33 0.06
+    "mountain":    {"walk": 2.0,  "drive": 10},
+    "mountain_dark": {"walk": 1.0,  "drive": 5},
+    "ocean":       {"walk": 0,    "drive": 0},  
+    "water":       {"walk": 0,    "drive": 0},  
+    "stone":       {"walk": 0,  "drive": 0},  
+    "snow":        {"walk": 0,  "drive": 0}
 }
+
+def get_time_cost(terrain, travel_mode):
+    speed = TERRAIN_SPEED[terrain][travel_mode]
+    if speed == 0:
+        return float('inf')  
+    if travel_mode == "walk":
+        return (1 / speed) * 10
+    else:
+        return(1 / speed) * 100  # the bigger the speed => the lower the cost
 
 class Node:
     def __init__(self, parent=None, position=None):
@@ -23,7 +33,7 @@ class Node:
     def __eq__(self, other):
         return self.position == other.position
 
-def astar(terrain_map, start, end):
+def astar(terrain_map, start, end, travel_mode):
     start_node = Node(None, start)
     end_node = Node(None, end)
     
@@ -52,8 +62,8 @@ def astar(terrain_map, start, end):
                 continue
 
             terrain = terrain_map[y][x]
-            cost = TERRAIN_COST.get(terrain, -1)
-            if cost == -1:
+            cost = get_time_cost(terrain, travel_mode)  # Dynamic cost
+            if cost == float('inf'):
                 continue
 
             new_node = Node(current_node, (x, y))
@@ -63,7 +73,10 @@ def astar(terrain_map, start, end):
             if child in closed_list:
                 continue
 
-            child.g = current_node.g + TERRAIN_COST[terrain_map[child.position[1]][child.position[0]]]
+            # CHANGED: Use time-based cost instead of TERRAIN_COST
+            terrain = terrain_map[child.position[1]][child.position[0]]
+            child.g = current_node.g + get_time_cost(terrain, travel_mode)
+
             # Manhattan distance heuristic
             child.h = (abs(child.position[0] - end_node.position[0]) + abs(child.position[1] - end_node.position[1])) * 1  
             child.f = child.g + child.h

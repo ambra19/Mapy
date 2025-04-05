@@ -23,11 +23,13 @@ def find_route():
     data = request.get_json()
     start = tuple(data["start"])  # (x, y)
     end = tuple(data["end"])
+    travel_mode = data.get("travel_mode")  
+
     print("From route", "Start:", start, "End:", end)
 
     terrain_map = app.config.get("terrain_map")  
 
-    path = astar(terrain_map, start, end)
+    path = astar(terrain_map, start, end, travel_mode)
 
     if path:
         return jsonify({"path": path})

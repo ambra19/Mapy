@@ -78,6 +78,7 @@ const terrainColors = {
     const y = Math.floor(e.offsetY / tileSize);
   
     const terrain = map[y][x];
+    const travelMode = document.querySelector('input[name="travel_mode"]:checked').value;
     const allowedTerrains = ["sand", "land", "forest", "mountain", "mountain_dark"];
   
     if (!allowedTerrains.includes(terrain)) {
@@ -96,7 +97,7 @@ const terrainColors = {
       fetch('/route', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ start, end })
+        body: JSON.stringify({ start, end, travel_mode: travelMode })
       })
       .then(res => res.json())
       .then(data => {
