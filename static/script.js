@@ -80,15 +80,13 @@ const terrainColors = {
   }
   
   function colorTile(x, y, color) {
-    const canvas = document.getElementById('mapCanvas'); 
-    const ctx = canvas.getContext('2d');
     ctx.fillStyle = color;
-    ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    ctx.fillRect(x * tileSize, y * tileSize, tileSize-0.3, tileSize-0.3);
   }
 
   function resetTile(x, y) {
     const terrain = map[y][x];
-    ctx.fillStyle = terrainColors[terrain] || "#000";
+    ctx.fillStyle = terrainColors[terrain];
     ctx.fillRect(x * tileSize, y * tileSize, tileSize-0.3, tileSize-0.3);
 }
 
@@ -155,17 +153,7 @@ function handleClick(e) {
           document.getElementById('time-value').textContent = timeString;
           document.getElementById('distance-value').textContent = `${distance} km`;
   
-      })
-      .catch(err => {
-          console.error("Error:", err);
-          // Reset tiles on error too
-          if (selectedPoints.length === 2) {
-              const [[startX, startY], [endX, endY]] = selectedPoints;
-              resetTile(startX, startY);
-              resetTile(endX, endY);
-          }
-      });
-      
+      })      
       selectedPoints = []; 
   }
 }
