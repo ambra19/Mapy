@@ -9,6 +9,7 @@ const terrainColors = {
     stone: "#a7a9a2",
     snow: "#caf1ff"
   };
+
   const canvas = document.getElementById("mapCanvas");
   const ctx = canvas.getContext("2d");
   const tileSize = 18;
@@ -40,7 +41,7 @@ const terrainColors = {
     for (let y = 0; y < map.length; y++) {
       for (let x = 0; x < map[0].length; x++) {
         const terrain = map[y][x];
-        ctx.fillStyle = terrainColors[terrain] || "#000";
+        ctx.fillStyle = terrainColors[terrain];
         ctx.fillRect(x * tileSize, y * tileSize, tileSize-0.3, tileSize-0.3);
       }
     }

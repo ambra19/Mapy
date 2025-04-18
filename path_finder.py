@@ -17,7 +17,7 @@ def get_time_cost(terrain, travel_mode):
         return float('inf')  
     if travel_mode == "walk":
         return (1 / speed) * 10
-    return(1 / speed) * 100  
+    return (1 / speed) * 100  
 
 # Travel time based on path, terrain and travel mode
 def calculate_travel_time(path, terrain_map, travel_mode):

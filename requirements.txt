@@ -1,4 +1,5 @@
 Flask==2.3.2
-numpy==1.26.0
-Pillow==10.1.0
+numpy==1.26.4
+Pillow
 noise==1.2.2
+gunicorn
