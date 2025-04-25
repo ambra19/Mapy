@@ -4,7 +4,7 @@
 with support for **walking and driving modes**. It starts by
 rendering a randomly generated map using a seed. The map can contain mountains, forests, lands, seas, oceans, sands and even stone and snowy tops.
 
-![Screenshot](static/images/screenshot.png)
+![Screenshot](static/images/mapy.png)
 
 
 ## Features
